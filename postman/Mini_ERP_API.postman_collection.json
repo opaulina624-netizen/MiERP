@@ -1,0 +1,524 @@
+{
+  "info": {
+    "_postman_id": "a87932c1-c7e5-4298-90f1-4df29c2ea5b1",
+    "name": "MINI ERP API",
+    "description": "Colección completa para la práctica de laboratorio: Desarrollo de un Mini ERP mediante API (API-First Design, Comunicación Frontend-Backend, Diseño avanzado de APIs, Middlewares y Pipelines).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "TOKEN_GENERADO",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "0. Autenticación",
+      "item": [
+        {
+          "name": "POST /api/auth/login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.token) {",
+                  "    pm.collectionVariables.set('token', res.token);",
+                  "    console.log('Token guardado en variable de colección:', res.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"admin\",\n  \"password\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Autenticación para obtener token Bearer"
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Productos",
+      "item": [
+        {
+          "name": "GET /api/productos (Listar todos)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/productos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "productos"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/productos/:id (Obtener por ID)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/productos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "productos", "1"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/productos (Crear producto con validación)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"PROD006\",\n  \"nombre\": \"Tablet Galaxy Tab S9\",\n  \"precio\": 9800,\n  \"stock\": 12,\n  \"categoria\": \"Computación\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/productos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "productos"]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/productos/:id (Actualizar producto)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"PROD001\",\n  \"nombre\": \"Laptop Lenovo ThinkPad\",\n  \"precio\": 13200,\n  \"stock\": 15,\n  \"categoria\": \"Computación\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/productos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "productos", "1"]
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/productos/:id (Eliminar producto)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/productos/5",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "productos", "5"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/productos?categoria=computacion (Filtros)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/productos?categoria=computacion",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "productos"],
+              "query": [
+                {
+                  "key": "categoria",
+                  "value": "computacion"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/productos?buscar=laptop (Búsqueda)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/productos?buscar=laptop",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "productos"],
+              "query": [
+                {
+                  "key": "buscar",
+                  "value": "laptop"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/productos?page=1&limit=2 (Paginación)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/productos?page=1&limit=2",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "productos"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "2"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /api/productos?sort=precio&order=desc (Ordenamiento)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/productos?sort=precio&order=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "productos"],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "precio"
+                },
+                {
+                  "key": "order",
+                  "value": "desc"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Clientes",
+      "item": [
+        {
+          "name": "GET /api/clientes (Listar clientes)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clientes"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/clientes/:id (Obtener cliente)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clientes", "1"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/clientes (Crear cliente)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Distribuidora Médica del Centro\",\n  \"rfc\": \"DMC190405H89\",\n  \"telefono\": \"5544332211\",\n  \"correo\": \"pedidos@distribuidoramedica.com\",\n  \"direccion\": \"Calle Insurgentes Sur 450, CDMX\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clientes"]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/clientes/:id (Actualizar cliente)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Empresa ABC SA de CV (Matriz)\",\n  \"rfc\": \"ABC010101XXX\",\n  \"telefono\": \"5555555555\",\n  \"correo\": \"corporativo@empresa.com\",\n  \"direccion\": \"Av. Reforma 100 Piso 12, CDMX\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clientes", "1"]
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/clientes/:id (Eliminar cliente)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/clientes/3",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "clientes", "3"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Proveedores",
+      "item": [
+        {
+          "name": "GET /api/proveedores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/proveedores",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "proveedores"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/proveedores",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Tech Supplies International\",\n  \"rfc\": \"TSI160820MN2\",\n  \"telefono\": \"5588776655\",\n  \"correo\": \"ventas@techsupplies.com\",\n  \"contacto\": \"Lic. Roberto Gómez\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/proveedores",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "proveedores"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Ventas",
+      "item": [
+        {
+          "name": "GET /api/ventas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ventas"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/ventas/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ventas", "1"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/ventas (Flujo Éxito - Con Stock)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"fecha\": \"2026-10-20\",\n  \"productos\": [\n    {\n      \"productoId\": 1,\n      \"cantidad\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ventas"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/ventas (Flujo Rechazo - Stock Insuficiente: Stock 5, Cantidad 8)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": 1,\n  \"fecha\": \"2026-10-20\",\n  \"productos\": [\n    {\n      \"productoId\": 2,\n      \"cantidad\": 8\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ventas",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ventas"]
+            },
+            "description": "Demuestra la regla de negocio de la Sección 15: rechaza con 400 y devuelve stockDisponible: 5 y cantidadSolicitada: 8"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Compras e Inventario",
+      "item": [
+        {
+          "name": "GET /api/compras",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/compras",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "compras"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/compras (Reabastecer stock)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"proveedorId\": 1,\n  \"fecha\": \"2026-10-20\",\n  \"productos\": [\n    {\n      \"productoId\": 2,\n      \"cantidad\": 10,\n      \"precioUnitario\": 280\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/compras",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "compras"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/inventario (Resumen y Alertas)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/inventario",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "inventario"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/dashboard (Métricas principales)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
